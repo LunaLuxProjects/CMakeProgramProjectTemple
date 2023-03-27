@@ -1,15 +1,16 @@
 cmake_minimum_required(VERSION 3.22.1)
 project(ADD_PROJECT_NAME_HERE C CXX)
+
 #options
-set(BUILD_DOCS OFF)
-set(ENABLE_TESTS ON)
-set(STATIC_BUILD OFF)
 set(TERMIANL_MODE ON)
 #options end
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 include(FlagControl)
+include(LocalLibrary)
+
+add_definitions(-DPROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
 
 # Debug mode by default.
 if(NOT CMAKE_BUILD_TYPE)
@@ -69,8 +70,11 @@ else()
 endif()
 
 add_executable(${CMAKE_PROJECT_NAME}  ${PROJECT_SOURCE_DIR}/src/Main.cpp)
+flagsSetup(${CMAKE_PROJECT_NAME})
 
+target_include_directories (${CMAKE_PROJECT_NAME} PRIVATE  ${PROJECT_SOURCE_DIR}/libs/include STATIC)
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/Includes STATIC)
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src STATIC)
+
 include(SourceList)
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
